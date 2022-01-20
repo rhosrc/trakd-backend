@@ -11,32 +11,32 @@ const Note = require('../models/note');
 
 // ROUTES
 
+// INDEX
 projectsController.get('/', function (req, res){
     res.send('home page');
 })
 
 
-// PEOPLE INDEX ROUTE - POST
-projectsController.post('/projects', async (req, res) => {
+// NEW
+projectsController.get('/projects/new', function (req, res){
+    res.send('home page');
+})
+
+
+// DELETE
+projectsController.delete('/projects/:id', async (req, res) => {
     try {
-        res.json(await Project.create(req.body))
+        res.json(await Project.findByIdAndDelete(req.params.id));
     } catch (error) {
         res.status(400).json(error);
     }
 })
 
-projectsController.delete('/people/:id', async (req, res) => {
-    try {
-        res.json(await People.findByIdAndDelete(req.params.id));
-    } catch (error) {
-        res.status(400).json(error);
-    }
-})
-
-projectsController.put('/people/:id', async (req, res) => {
+// UPDATE
+projectsController.put('/projects/:id', async (req, res) => {
     try {
         res.json(
-            await People.findByIdAndUpdate(req.params.id, req.body, {
+            await Project.findByIdAndUpdate(req.params.id, req.body, {
                 new: true
             })
         )
@@ -45,6 +45,21 @@ projectsController.put('/people/:id', async (req, res) => {
     }
 })
 
+
+// CREATE
+
+projectsController.post('/projects', async (req, res) => {
+    try {
+        res.json(await Project.create(req.body))
+    } catch (error) {
+        res.status(400).json(error);
+    }
+})
+
+// EDIT
+
+
+// SHOW
 
 
 module.exports = projectsController;

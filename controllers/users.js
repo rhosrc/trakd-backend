@@ -20,7 +20,7 @@ usersController.get('/signup', function (req, res){
 })
 
 usersController.get('/logout', function (req, res){
-    res.send('sign up here');
+    res.send('logout here');
 })
 
 usersController.get('/dashboard', function (req, res){
@@ -28,7 +28,7 @@ usersController.get('/dashboard', function (req, res){
 })
 
 usersController.post('/dashboard', function (req, res){
-    res.send('sign up here');
+    res.send('login');
 })
 
 
