@@ -5,26 +5,27 @@ const projectsController = express.Router();
 const axios = require('axios');
 
 const Project = require('../models/project');
-const User = require('../models/user');
 const Note = require('../models/note');
 
 
 // ROUTES
 
+// ROOT/HOME
+
+
+
 // INDEX
-projectsController.get('/', function (req, res){
-    res.send('home page');
-})
-
-
-// NEW
-projectsController.get('/projects/new', function (req, res){
-    res.send('home page');
+projectsController.get('/projects', async function (req, res) {
+    try {
+        res.json(await Project.find({}));
+    } catch (error) {
+        res.status(400).json(error);
+    }
 })
 
 
 // DELETE
-projectsController.delete('/projects/:id', async (req, res) => {
+projectsController.delete('/projects/:id', async function (req, res) {
     try {
         res.json(await Project.findByIdAndDelete(req.params.id));
     } catch (error) {
@@ -33,7 +34,7 @@ projectsController.delete('/projects/:id', async (req, res) => {
 })
 
 // UPDATE
-projectsController.put('/projects/:id', async (req, res) => {
+projectsController.put('/projects/:id', async function (req, res)  {
     try {
         res.json(
             await Project.findByIdAndUpdate(req.params.id, req.body, {
@@ -48,7 +49,7 @@ projectsController.put('/projects/:id', async (req, res) => {
 
 // CREATE
 
-projectsController.post('/projects', async (req, res) => {
+projectsController.post('/projects', async function (req, res) {
     try {
         res.json(await Project.create(req.body))
     } catch (error) {
@@ -56,10 +57,20 @@ projectsController.post('/projects', async (req, res) => {
     }
 })
 
-// EDIT
-
 
 // SHOW
+
+projectsController.get('/projects/:id', async function (req, res) {
+    try {
+        res.json(await Project.findById(req.params.id).populate('notes'));
+    } catch (error) {
+        res.status(400).json(error);
+    }
+})
+
+// .populate('notes').exec(function (err, project) {
+//     console.log('notes populated!');
+// }
 
 
 module.exports = projectsController;

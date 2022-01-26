@@ -13,7 +13,7 @@ const app = express();
 const mongoose = require('mongoose');
 
 const projectsController = require('./controllers/projects');
-const usersController = require('./controllers/users');
+// const notesController = require('./controllers/notes');
 
 const cors = require('cors');
 const morgan = require('morgan');
@@ -47,7 +47,7 @@ app.use(express.json());
 // Mount routes
 
 app.use('/', projectsController);
-app.use('/', usersController);
+// app.use('/', notesController);
 
 
 // LISTENER
