@@ -10,7 +10,11 @@ const projectSchema = new Schema({
     paid: String,
     due: Date,
     status: String,
-    notes: [{type: Schema.Types.ObjectId, ref: 'Note'}], 
+    notes: [{
+        title: String,
+        content: Number,
+        tags: [String]
+    }], 
     photos: [{type: String}],
 }, {timestamps: true});
 

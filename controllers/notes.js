@@ -6,10 +6,9 @@ const Project = require('../models/project');
 const Note = require('../models/note');
 
 
-notesController.post('/projects/:id', async function (req, res) {
+notesController.post('/projects', async function (req, res) {
     try {
         res.json(await Note.create(req.body));
-        await Project.save();
     } catch (error) {
         res.status(400).json(error);
     }
@@ -22,3 +21,5 @@ notesController.post('/projects/:id', async function (req, res) {
 //     )
 //     await Project.save();
 // }
+
+module.exports = notesController;
