@@ -10,12 +10,10 @@ const projectSchema = new Schema({
     paid: String,
     due: Date,
     status: String,
-    notes: [{
-        title: String,
-        content: Number,
-        tags: [String]
-    }], 
-    photos: [{type: String}],
+    notes: [{ 
+        content: String
+    }],
+    photos: [{type: String}]
 }, {timestamps: true});
 
 module.exports = mongoose.model('Project', projectSchema);

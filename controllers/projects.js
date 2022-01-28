@@ -51,6 +51,7 @@ projectsController.put('/projects/:id', async function (req, res)  {
 
 projectsController.post('/projects', async function (req, res) {
     try {
+       
         res.json(await Project.create(req.body))
     } catch (error) {
         res.status(400).json(error);
@@ -62,15 +63,34 @@ projectsController.post('/projects', async function (req, res) {
 
 projectsController.get('/projects/:id', async function (req, res) {
     try {
-        res.json(await Project.findById(req.params.id).populate('notes'));
+        res.json(await Project.findById(req.params.id));
     } catch (error) {
         res.status(400).json(error);
     }
 })
 
-// .populate('notes').exec(function (err, project) {
-//     console.log('notes populated!');
-// }
+
+projectsController.post('/projects/:id/notes', async function (req, res) {  
+    try {
+        const project = await Project.findById(req.params.id);
+        project.notes.push(req.body);
+        await project.save();
+    } catch (error) {
+        res.status(400).json(error);
+    }
+})
+
+// projectsController.delete('/projects/:id/notes/:noteId', async function (req, res) {
+//     try {
+    // { $pull : { 'notes': { 'note._id': req.params.noteId } } }
+//         res.json(await Project.findByIdAndDelete(req.params.noteId));
+//         console.log('hello')
+//     } catch (error) {
+//         res.status(400).json(error);
+//     }
+// })
+
+
 
 
 module.exports = projectsController;

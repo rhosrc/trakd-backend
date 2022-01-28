@@ -6,9 +6,21 @@ const Project = require('../models/project');
 const Note = require('../models/note');
 
 
-notesController.post('/projects', async function (req, res) {
+notesController.post('/projects/:id/notes', async function (req, res) {
     try {
-        res.json(await Note.create(req.body));
+        const note = await Note.create({ content: req.body.newNote});
+        // console.log(note);
+        await note.save()
+        // console.log(req.body.newNote);
+    } catch (error) {
+        res.status(400).json(error);
+    }
+})
+
+notesController.get('/projects/:id/notes', async function (req, res) {
+    try {
+        res.json(await Note.findById({ content: req.body.newNote}));
+        console.log(req.body.newNote);
     } catch (error) {
         res.status(400).json(error);
     }
