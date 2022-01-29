@@ -7,19 +7,43 @@ const axios = require('axios');
 
 const Project = require('../models/Project');
 // const Note = require('../models/note');
-const cloudinary = require('cloudinary').v2;
+// const cloudinary = require('cloudinary').v2;
 
-// ROUTES
+// Auth
+const admin = require('firebase-admin');
+
+const serviceAccount = require('../service-account-credentials.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
+// authentication middleware
+
+async function isAuthenticated(req, res, next) {
+    try {
+        const token = req.get('Authorization')
+        if(!token) throw new Error('please log in');
+        const user = await admin.auth().verifyIdToken(token.replace('Bearer ', ''));
+        if(!user) throw new Error('something went wrong');
+        req.user = user;
+        next();
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }
+}
 
 // ROOT/HOME
 
 projectsController.get('/', function (req, res) {
     res.send('hello world');
 })
+
 // INDEX
-projectsController.get('/projects', async function (req, res) {
+projectsController.get('/projects', isAuthenticated, async function (req, res) {
     try {
-        res.json(await Project.find({}));
+        res.json(await Project.find({ uId: req.user.uid }));
     } catch (error) {
         res.status(400).json(error);
     }
@@ -27,7 +51,7 @@ projectsController.get('/projects', async function (req, res) {
 
 
 // DELETE
-projectsController.delete('/projects/:id', async function (req, res) {
+projectsController.delete('/projects/:id', isAuthenticated, async function (req, res) {
     try {
         res.json(await Project.findByIdAndDelete(req.params.id));
     } catch (error) {
@@ -36,7 +60,7 @@ projectsController.delete('/projects/:id', async function (req, res) {
 })
 
 // UPDATE
-projectsController.put('/projects/:id', async function (req, res)  {
+projectsController.put('/projects/:id', isAuthenticated, async function (req, res)  {
     try {
         res.json(
             await Project.findByIdAndUpdate(req.params.id, req.body, {
@@ -51,9 +75,9 @@ projectsController.put('/projects/:id', async function (req, res)  {
 
 // CREATE
 
-projectsController.post('/projects', async function (req, res) {
-    // console.log(req.files)
+projectsController.post('/projects', isAuthenticated, async function (req, res) {
     try {
+        req.body.uId = req.user.uid;
         res.json(await Project.create(req.body))
     } catch (error) {
         res.status(400).json(error);
@@ -63,7 +87,7 @@ projectsController.post('/projects', async function (req, res) {
 
 // SHOW
 
-projectsController.get('/projects/:id', async function (req, res) {
+projectsController.get('/projects/:id', isAuthenticated, async function (req, res) {
     try {
         res.json(await Project.findById(req.params.id));
     } catch (error) {
@@ -72,7 +96,7 @@ projectsController.get('/projects/:id', async function (req, res) {
 })
 
 // Add note
-projectsController.post('/projects/:id/notes', async function (req, res) {  
+projectsController.post('/projects/:id/notes', isAuthenticated, async function (req, res) {  
     try {
         const project = await Project.findById(req.params.id);
         project.notes.push(req.body);
@@ -83,7 +107,7 @@ projectsController.post('/projects/:id/notes', async function (req, res) {
 })
 
 // Delete note
-projectsController.delete('/notes/:id', async function (req, res) {
+projectsController.delete('/notes/:id', isAuthenticated, async function (req, res) {
     try {
         const project = await Project.findOne({'notes._id': req.params.id });
         project.notes.pull(req.params.id);            

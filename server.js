@@ -31,6 +31,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 
+// AUTH
+
+
+
+
 // DATABASE CONNECT
 
 mongoose.connect(process.env.DATABASE_URL);
