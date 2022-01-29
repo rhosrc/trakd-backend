@@ -5,7 +5,7 @@ const projectsController = express.Router();
 const axios = require('axios');
 
 
-const Project = require('../models/project');
+const Project = require('../models/Project');
 // const Note = require('../models/note');
 const cloudinary = require('cloudinary').v2;
 
