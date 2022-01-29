@@ -13,8 +13,9 @@ const cloudinary = require('cloudinary').v2;
 
 // ROOT/HOME
 
-
-
+projectsController.get('/', function (req, res) {
+    res.send('hello world');
+})
 // INDEX
 projectsController.get('/projects', async function (req, res) {
     try {
