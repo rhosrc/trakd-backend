@@ -12,7 +12,7 @@ const Project = require('../models/Project');
 // Auth
 const admin = require('firebase-admin');
 
-const serviceAccount = require('../service-account-credentials.json');
+const serviceAccount = JSON.parse(process.env.GOOGLE_INFO);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)

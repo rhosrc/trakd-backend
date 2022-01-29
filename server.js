@@ -26,7 +26,6 @@ cloudinary.config({
 
 const {PORT = 3001, DATABASE_URL} = process.env;
 
-
 const cors = require('cors');
 const morgan = require('morgan');
 
