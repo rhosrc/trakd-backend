@@ -4,9 +4,10 @@ const express = require('express');
 const projectsController = express.Router();
 const axios = require('axios');
 
-const Project = require('../models/project');
-const Note = require('../models/note');
 
+const Project = require('../models/project');
+// const Note = require('../models/note');
+const cloudinary = require('cloudinary').v2;
 
 // ROUTES
 
@@ -50,8 +51,8 @@ projectsController.put('/projects/:id', async function (req, res)  {
 // CREATE
 
 projectsController.post('/projects', async function (req, res) {
+    // console.log(req.files)
     try {
-       
         res.json(await Project.create(req.body))
     } catch (error) {
         res.status(400).json(error);
@@ -69,7 +70,7 @@ projectsController.get('/projects/:id', async function (req, res) {
     }
 })
 
-
+// Add note
 projectsController.post('/projects/:id/notes', async function (req, res) {  
     try {
         const project = await Project.findById(req.params.id);
@@ -79,6 +80,20 @@ projectsController.post('/projects/:id/notes', async function (req, res) {
         res.status(400).json(error);
     }
 })
+
+// Delete note
+projectsController.delete('/notes/:id', async function (req, res) {
+    try {
+        const project = await Project.findOne({'notes._id': req.params.id });
+        project.notes.pull(req.params.id);            
+        res.json(await project.save());
+    } catch (error) {
+        res.status(400).json(error);
+    }
+    
+})
+
+
 
 // projectsController.delete('/projects/:id/notes/:noteId', async function (req, res) {
 //     try {

@@ -1,19 +1,31 @@
 // REQUIRE DEPENDENCIES 
+// import express
+
+const express = require('express');
+const mongoose = require('mongoose');
+const expressFileUpload = require('express-fileupload');
+const cloudinary = require('cloudinary').v2;
+
+// Controllers
+
+const projectsController = require('./controllers/projects');
+
+
+// initalize app
+const app = express();
+
 
 require('dotenv').config();
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+})
 
 // pull PORT from .env
 
 const {PORT = 3001, DATABASE_URL} = process.env;
 
-// import express
-
-const express = require('express');
-const app = express();
-const mongoose = require('mongoose');
-
-const projectsController = require('./controllers/projects');
-// const notesController = require('./controllers/notes');
 
 const cors = require('cors');
 const morgan = require('morgan');
@@ -42,6 +54,7 @@ db.on('disconnected', function () {
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(expressFileUpload({ createParentPath: true }))
 
 
 // Mount routes
