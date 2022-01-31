@@ -15,7 +15,8 @@ const projectSchema = new Schema({
     status: String,
     notes: [{ 
         content: String
-    }]
+    }],
+    photos: String
 }, {timestamps: true});
 
 module.exports = mongoose.model('Project', projectSchema);

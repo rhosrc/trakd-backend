@@ -1,30 +1,43 @@
 // REQUIRE DEPENDENCIES 
 // import express
 
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const expressFileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2;
+const admin = require('firebase-admin');
 
 // Controllers
 
 const projectsController = require('./controllers/projects');
 
 
+// AUTH
+const serviceAccount = JSON.parse(process.env.GOOGLE_INFO);
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
 // initalize app
 const app = express();
 
 
-require('dotenv').config();
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
-})
+// console.log(JSON.parse(process.env.GOOGLE_INFO))
+
+// cloudinary.config({
+//     cloud_name: process.env.CLOUD_NAME,
+//     api_key: process.env.API_KEY,
+//     api_secret: process.env.API_SECRET
+// })
 
 // pull PORT from .env
 
 const {PORT = 3001, DATABASE_URL} = process.env;
+
+
 
 const cors = require('cors');
 const morgan = require('morgan');
@@ -37,7 +50,7 @@ const morgan = require('morgan');
 
 // DATABASE CONNECT
 
-mongoose.connect(process.env.DATABASE_URL);
+mongoose.connect(DATABASE_URL);
 const db = mongoose.connection;
 
 // Connection Listeners

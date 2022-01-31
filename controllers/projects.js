@@ -3,20 +3,12 @@
 const express = require('express');
 const projectsController = express.Router();
 const axios = require('axios');
-
+const admin = require('firebase-admin');
 
 const Project = require('../models/Project');
 // const Note = require('../models/note');
 // const cloudinary = require('cloudinary').v2;
 
-// Auth
-const admin = require('firebase-admin');
-
-const serviceAccount = JSON.parse(process.env.GOOGLE_INFO);
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
 
 
 // authentication middleware
